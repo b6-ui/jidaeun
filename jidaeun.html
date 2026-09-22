@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEON GROUP - INTEGRATED INTRANET</title>
+    <style>
+        :root {
+            --bg-gradient: radial-gradient(circle at top right, #051924, #0b1329, #020617);
+            --card-bg: rgba(15, 23, 42, 0.75);
+            --card-border: rgba(56, 189, 248, 0.15);
+            --accent-primary: #38bdf8;
+            --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #2dd4bf 100%);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --neon-glow: 0 0 30px rgba(56, 189, 248, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-attachment: fixed;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 은은하고 세련된 배경 스캔라인 & 모션 효과 */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 999;
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .intranet-box {
+            width: 100%;
+            max-width: 720px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), var(--neon-glow);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 기업형 인트라넷 상단 헤더 & 커스텀 로고 */
+        .intranet-header {
+            background: rgba(2, 6, 23, 0.85);
+            padding: 16px 28px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #94a3b8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .brand-logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            width: 26px;
+            height: 26px;
+            background: var(--accent-gradient);
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 900;
+            color: #0f172a;
+            font-size: 0.85rem;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        }
+
+        .brand-name {
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+
+        .brand-name span {
+            color: #38bdf8;
+        }
+
+        /* 1. 로그인 화면 */
+        #login-screen {
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        #login-screen h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff 40%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        #login-screen p {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            margin-bottom: 35px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 340px;
+            margin: 0 auto;
+        }
+
+        .login-input {
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .login-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .login-btn {
+            padding: 15px;
+            background: var(--accent-gradient);
+            color: #0f172a;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.25);
+        }
+
+        .login-btn:hover {
+            opacity: 0.92;
+            transform: translateY(-2px);
+        }
+
+        /* 2. 로딩 화면 */
+        #loading-screen {
+            display: none;
+            padding: 70px 40px;
+            text-align: center;
+        }
+
+        #loading-screen h3 {
+            font-size: 1.2rem;
+            color: #f8fafc;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        #loading-text {
+            color: var(--accent-primary);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            font-family: monospace;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 360px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 10px;
+            transition: width 0.08s linear;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+        }
+
+        /* 3. 메인 대시보드 화면 */
+        #main-screen {
+            display: none;
+        }
+
+        .dashboard-content {
+            padding: 32px;
+        }
+
+        .profile-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            padding: 24px;
+            border-radius: 18px;
+        }
+
+        .profile-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .image-placeholder {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(45, 212, 191, 0.05));
+            border: 2px solid rgba(56, 189, 248, 0.35);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #f8fafc;
+            text-align: center;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+        }
+
+        .image-placeholder svg {
+            width: 30px;
+            height: 30px;
+            margin-bottom: 4px;
+            fill: #38bdf8;
+        }
+
+        .profile-info h1 {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .profile-info p {
+            color: var(--text-sub);
+            font-size: 0.88rem;
+            margin-bottom: 8px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: rgba(56, 189, 248, 0.1);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.73rem;
+            font-weight: 600;
+        }
+
+        /* 사내 메신저 보내기 버튼 영역 */
+        .messenger-action-box {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+            background: rgba(56, 189, 248, 0.03);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        .messenger-input-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .messenger-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .messenger-input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
+
+        .messenger-btn {
+            padding: 12px 20px;
+            background: #38bdf8;
+            color: #0f172a;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .messenger-btn:hover {
+            background: #2dd4bf;
+            box-shadow: 0 0 15px rgba(45, 212, 191, 0.3);
+        }
+
+        .messenger-status-msg {
+            font-size: 0.78rem;
+            color: var(--text-sub);
+            padding-left: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 상세 정보 토글 버튼 */
+        .toggle-btn {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            color: #f8fafc;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
+        }
+
+        /* 상세 정보 카드 */
+        .details-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .detail-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 20px 24px;
+        }
+
+        .detail-card h3 {
+            font-size: 0.95rem;
+            color: #38bdf8;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .detail-list {
+            list-style: none;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+
+        .detail-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 16px;
+        }
+
+        .detail-list li::before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: #2dd4bf;
+            font-size: 0.65rem;
+            top: 4px;
+        }
+
+        /* 보안 잠금 카드 */
+        .secret-box {
+            background: rgba(45, 212, 191, 0.02);
+            border: 1px dashed rgba(45, 212, 191, 0.3);
+        }
+
+        .secret-box h3 {
+            color: #2dd4bf;
+        }
+
+        .secret-content {
+            position: relative;
+            filter: blur(8px);
+            user-select: none;
+            transition: filter 0.4s ease;
+            pointer-events: none;
+        }
+
+        .secret-content.revealed {
+            filter: none;
+            user-select: auto;
+            pointer-events: auto;
+        }
+
+        .secret-lock-ui {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .secret-lock-ui.hidden {
+            display: none;
+        }
+
+        .secret-msg {
+            font-size: 0.85rem;
+            color: #5eead4;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .password-input-group {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .secret-input {
+            padding: 10px 14px;
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid rgba(45, 212, 191, 0.4);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            width: 100%;
+            text-align: center;
+        }
+
+        .secret-btn {
+            padding: 10px 16px;
+            background: #2dd4bf;
+            color: #0f172a;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .error-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="intranet-box">
+        <!-- 인트라넷 상단 헤더 및 커스텀 로고 -->
+        <div class="intranet-header">
+            <div class="brand-logo-area">
+                <div class="brand-icon">S</div>
+                <div class="brand-name">SEON <span>GROUP</span> INTRANET</div>
+            </div>
+            <span id="user-display">SECURE ACCESS</span>
+        </div>
+
+        <!-- 1. 로그인 화면 -->
+        <div id="login-screen">
+            <h2>사내 인트라넷 인증</h2>
+            <p>접속을 위해 성함을 입력해주세요.</p>
+            <div class="login-form">
+                <input type="text" id="username-input" class="login-input" placeholder="성함 입력" autocomplete="off">
+                <button class="login-btn" onclick="startLoginProcess()">시스템 로그인</button>
+            </div>
+        </div>
+
+        <!-- 2. 로딩 화면 (프로그레스 바) -->
+        <div id="loading-screen">
+            <h3>세온그룹 보안 프로토콜 인증 중...</h3>
+            <p id="loading-text">인사기록부 데이터를 동기화하는 중 (0%)</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- 3. 메인 대시보드 화면 -->
+        <div id="main-screen">
+            <div class="dashboard-content">
+                
+                <!-- 프로필 상단 요약 -->
+                <div class="profile-top">
+                    <div class="profile-left">
+                        <div class="image-placeholder">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            <span>사원 사진</span>
+                        </div>
+                        <div class="profile-info">
+                            <h1 id="profile-name">지다은 (30세)</h1>
+                            <p>전략기획실 사원 (입사 1~2개월 차)</p>
+                            <span class="status-badge">인사기록부 검증완료</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 사내 메신저 보내기 위젯 (답장 없음 연출) -->
+                <div class="messenger-action-box">
+                    <div class="messenger-input-row">
+                        <input type="text" id="messenger-msg" class="messenger-input" placeholder="지다은 사원에게 사내 메신저 전송..." autocomplete="off">
+                        <button class="messenger-btn" onclick="sendMessenger()">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                            전송
+                        </button>
+                    </div>
+                    <div class="messenger-status-msg" id="messenger-status">
+                        <span>💡 메시지를 전송하면 지다은의 PC 화면에 팝업으로 전달되지만, 읽지 않음 상태로 유지됩니다.</span>
+                    </div>
+                </div>
+
+                <!-- 상세 정보 더보기 토글 버튼 -->
+                <button class="toggle-btn" onclick="toggleDetails()">
+                    <span id="toggle-icon">▼</span> <span id="toggle-text">상세 인사기록 더보기</span>
+                </button>
+
+                <!-- 상세 정보 영역 -->
+                <div class="details-grid" id="detail-section" style="display: none;">
+                    
+                    <!-- 대학 시절 연애 및 첫만남 기록 -->
+                    <div class="detail-card">
+                        <h3>💬 대학 시절 연애 및 첫만남 기록</h3>
+                        <ul class="detail-list">
+                            <li><strong>첫만남과 반함:</strong> 대학 시절, 캠퍼스에서 서로를 처음 본 순간부터 강렬하게 이끌리며 한눈에 반함. 순식간에 달콤한 연인 관계로 발전함.</li>
+                            <li><strong>잦은 깨붙(깨지고 붙기):</strong> 뜨거웠던 시작과 달리 성격 차이와 사소한 자존심 싸움으로 인해 수없이 헤어지고 재결합을 반복함.</li>
+                            <li><strong>최종 결별:</strong> 주변 지인들도 둘의 상태를 헷갈릴 정도였으나, 결국 한 번의 큰 다툼을 끝으로 완전히 갈라선 뒤 연락을 끊음.</li>
+                        </ul>
+                    </div>
+
+                    <!-- 사내 재회 관계 -->
+                    <div class="detail-card">
+                        <h3>🔗 사내 재회 및 대내외 관계 특이사항</h3>
+                        <ul class="detail-list">
+                            <li><strong>우연한 재회:</strong> 최근 세온그룹 전략기획실에 입사한 직후, 사내에서 운명의 장난처럼 마주침.</li>
+                            <li><strong>철저한 선 긋기:</strong> "회사에서는 모르는 사람처럼 지내자"고 엄포를 놓았지만, 둘만 남으면 대학 시절 승부욕이 발동함.</li>
+                            <li><strong>티격태격 케미:</strong> 서로의 약점과 흑역사를 꿰뚫고 있어 한마디도 안 지려고 하며, 주변 시선이 느껴지면 황급히 존댓말로 돌변함.</li>
+                        </ul>
+                    </div>
+
+                    <!-- 외모 및 성향 -->
+                    <div class="detail-card">
+                        <h3>✨ 외모 및 근무 태도</h3>
+                        <ul class="detail-list">
+                            <li>밝은 갈색 중단발, 웃을 때의 보조개, 아담한 체구 (163cm / 49kg).</li>
+                            <li>평소에는 싹싹하고 업무 처리가 꼼꼼한 모범 사원.</li>
+                            <li>단 한 사람만 만나면 의외의 집요함과 말싸움 본능이 튀어나옴.</li>
+                        </ul>
+                    </div>
+
+                    <!-- 카드 1: 비밀 설정 (4자리 숫자 입력 시 해제) -->
+                    <div class="detail-card secret-box" id="secret-card-1">
+                        <h3>🔒 [SECURITY LEVEL 3] 비공개 심리 기밀 데이터</h3>
+                        <div class="secret-lock-ui" id="lock-ui-1">
+                            <p class="secret-msg">🔒 보안 구역입니다. <strong>4자리 숫자 비밀번호</strong>를 입력하여 심리 분석을 해제하세요.</p>
+                            <div class="password-input-group">
+                                <input type="password" id="pw-input-1" class="secret-input" placeholder="4자리 숫자" maxlength="4" autocomplete="off">
+                                <button class="secret-btn" onclick="verifySecret(1)">해제</button>
+                            </div>
+                        </div>
+                        <div class="secret-content" id="secret-target-1">
+                            <p><strong>[본인 심리 분석 보고서]</strong></p>
+                            <ul class="detail-list" style="margin-top: 8px;">
+                                <li>{{user}}와 헤어진 뒤 정말 아무 미련 없이 각자의 삶을 살았다고 생각했다.</li>
+                                <li>하지만 재회한 뒤 서로의 행동을 너무 쉽게 이해하고 예전처럼 말싸움을 하는 자신을 발견한다.</li>
+                                <li>그렇다고 먼저 과거의 관계를 되돌릴 생각은 없다. 적어도 현재는 {{user}}를 그저 성가신 전 애인으로 생각하려 한다.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 카드 2: 연애 TMI (jidaeunsecret 입력 시 해제) -->
+                    <div class="detail-card secret-box" id="secret-card-2">
+                        <h3>🔒 [SECURITY LEVEL 3] 비공개 연애 TMI 데이터</h3>
+                        <div class="secret-lock-ui" id="lock-ui-2">
+                            <p class="secret-msg">🔒 보안 구역입니다. 비밀번호(<strong>jidaeunsecret</strong>)를 입력하여 연애 이력을 해제하세요.</p>
+                            <div class="password-input-group">
+                                <input type="password" id="pw-input-2" class="secret-input" placeholder="비밀번호" autocomplete="off">
+                                <button class="secret-btn" onclick="verifySecret(2)">해제</button>
+                            </div>
+                        </div>
+                        <div class="secret-content" id="secret-target-2">
+                            <p><strong>[연애 이력 및 TMI 분석 보고서]</strong></p>
+                            <ul class="detail-list" style="margin-top: 8px;">
+                                <li><strong>학창 시절:</strong> 중학교 때 한 번, 고등학교 때 두 번 연애 경험이 있으나 결과가 재미없어서 둘 다 10일 만에 헤어짐.</li>
+                                <li><strong>진정한 첫사랑:</strong> 대학생 시절 만난 {{user}}가 인생 최초의 진짜 첫사랑이자 깊은 연애사였음.</li>
+                                <li><strong>이별 후 후일담:</strong> 완전히 갈라선 이후 마음을 잡기 위해 다른 연애도 몇 번 시도해 보았으나, 옛 생각에 겹쳐 길어야 한 달을 넘기지 못하고 전부 끝남.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let inputUserName = "";
+
+        function startLoginProcess() {
+            const inputVal = document.getElementById('username-input').value.trim();
+            if (!inputVal) {
+                alert('성함을 입력해주세요.');
+                return;
+            }
+            inputUserName = inputVal;
+
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('loading-screen').style.display = 'block';
+
+            let progress = 0;
+            const progressBar = document.getElementById('progress-bar');
+            const loadingText = document.getElementById('loading-text');
+
+            const loadingInterval = setInterval(() => {
+                progress += Math.floor(Math.random() * 10) + 4;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(loadingInterval);
+                    
+                    setTimeout(() => {
+                        document.getElementById('loading-screen').style.display = 'none';
+                        document.getElementById('main-screen').style.display = 'block';
+                        document.getElementById('user-display').innerText = `USER: ${inputUserName} (AUTHENTICATED)`;
+                    }, 350);
+                }
+                progressBar.style.width = progress + '%';
+                loadingText.innerText = `인사기록부 데이터를 동기화하는 중 (${progress}%)`;
+            }, 45);
+        }
+
+        function sendMessenger() {
+            const msgInput = document.getElementById('messenger-msg');
+            const statusMsg = document.getElementById('messenger-status');
+            const msgVal = msgInput.value.trim();
+
+            if (!msgVal) {
+                alert('보낼 내용을 입력해주세요.');
+                msgInput.focus();
+                return;
+            }
+
+            statusMsg.innerHTML = `<span style="color: #38bdf8;">📤 전송 완료: "${msgVal}" (읽지 않음 · 상대방이 무시 중입니다)</span>`;
+            msgInput.value = '';
+            
+            setTimeout(() => {
+                statusMsg.innerHTML = `<span>💡 메시지가 성공적으로 발송되었으나, 지다은 사원에게서 답장이 오지 않습니다. (읽지 않음 유지)</span>`;
+            }, 4000);
+        }
+
+        function toggleDetails() {
+            const detailSec = document.getElementById('detail-section');
+            const toggleText = document.getElementById('toggle-text');
+            const toggleIcon = document.getElementById('toggle-icon');
+
+            if (detailSec.style.display === 'none') {
+                detailSec.style.display = 'flex';
+                toggleText.innerText = '상세 인사기록 접기';
+                toggleIcon.innerText = '▲';
+                detailSec.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                detailSec.style.display = 'none';
+                toggleText.innerText = '상세 인사기록 더보기';
+                toggleIcon.innerText = '▼';
+            }
+        }
+
+        function verifySecret(cardNum) {
+            const inputField = document.getElementById(`pw-input-${cardNum}`);
+            const pwInput = inputField.value.trim();
+            
+            let isSuccess = false;
+
+            if (cardNum === 1) {
+                if (pwInput.length === 4 && !isNaN(pwInput)) {
+                    isSuccess = true;
+                } else {
+                    alert('4자리 숫자를 입력해주세요.');
+                    inputField.value = '';
+                    inputField.focus();
+                    return;
+                }
+            } else if (cardNum === 2) {
+                if (pwInput === "jidaeunsecret") {
+                    isSuccess = true;
+                } else {
+                    inputField.classList.add('error-shake');
+                    setTimeout(() => inputField.classList.remove('error-shake'), 400);
+                    alert('비밀번호가 일치하지 않습니다.');
+                    inputField.value = '';
+                    inputField.focus();
+                    return;
+                }
+            }
+
+            if (isSuccess) {
+                document.getElementById(`lock-ui-${cardNum}`).classList.add('hidden');
+                document.getElementById(`secret-target-${cardNum}`).classList.add('revealed');
+            }
+        }
+    </script>
+
+</body>
+</html>
